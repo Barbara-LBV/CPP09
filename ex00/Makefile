@@ -5,7 +5,7 @@ NAME	= btc
 
 # Source files list
 SRCS_DIR 	= src/
-SRCS_NAME 	= main.cpp \\
+SRCS_NAME 	= main.cpp \
 			BitCoinExchange.cpp
 			
 SRCS		= $(wildcard $(SRCS_DIR)*.cpp)

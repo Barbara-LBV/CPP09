@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/10/27 17:24:20 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/01 18:54:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,67 @@
 # define BITCOINEXCHANGE_HPP
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <string>
 #include <map>
+#include <stdlib.h> 
 
-class BitCoin
+# define DEFAULT "\001\033[0;39m\002"
+# define BOLD "\001\033[1;89m\002"
+# define RED "\001\033[1;91m\002"
+# define BLUE "\001\033[1;36m\002"
+# define YELLOW "\001\033[1;93m\002"
+
+class BitCoin //: public std::map
 {
-	
+    private :
+        std::map<char *, float>  _map;
+  
+    public :
+        BitCoin();
+        BitCoin(float rate);
+        BitCoin(BitCoin const &b);
+        BitCoin &operator=(BitCoin const &b);
+        ~BitCoin();
+
+        //void	      fillMap(std::string line);
+        void	      fillMap(std::ifstream file);
+        bool	      checkLine(std::string line);
+        void	      checkDate(std::string date);
+        float		    checkRate(char *r);
+        char	      *findRate(std::string line);
+        std::string	getDate(void)const;
+        float       getRate(void)const;
+        float       getRes(void) const;
+
+    class BadInput : public std::exception
+    {
+      public:
+        virtual const char* what() const throw()
+          {
+            return (YELLOW "bad input." DEFAULT);
+          }
+    };
+    class NoPositiveNb : public std::exception
+    {
+      public:
+        virtual const char* what() const throw()
+        {
+          return (YELLOW "not a positive number." DEFAULT);
+        }
+    };
+    class RateTooLarge : public std::exception
+    {
+      public:
+        virtual const char* what() const throw()
+        {
+          return (YELLOW "too large a number." DEFAULT);
+        }
+    };  
 };
+
+std::ostream &operator<<( std::ostream &o, BitCoin &b);
 
 #endif
 

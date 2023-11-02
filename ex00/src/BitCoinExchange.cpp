@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitCoinExchange.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:42:29 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/01 18:54:54 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:39:46 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 BitCoin::BitCoin()
 {
 	std::cout << BLUE "Default constructor -> called" DEFAULT << std::endl;
-}
-
-BitCoin::BitCoin(float rate)
-{
-	std::cout << BLUE "Parametric constructor -> called" DEFAULT << std::endl;
 }
 
 BitCoin::BitCoin(BitCoin const &b)
@@ -41,36 +36,37 @@ BitCoin::~BitCoin()
 	std::cout << BLUE "Destructor -> called" DEFAULT << std::endl;
 }
 
-std::ostream &operator<<( std::ostream &o, BitCoin &b)
-{
-	o << b.getDate() << " | "   // a ne suffira sans doute pas a recuperer la valeur "date" au bon node de map
-	  << b.getRate() << " => " // idem => utiliser les iterateurs !
-	  << b.getRes() << std::endl;
-	return (o);
-}
+// std::ostream &operator<<( std::ostream &o, BitCoin &b)
+// {
+// 	o << b.getDate() << " | "   // a ne suffira sans doute pas a recuperer la valeur "date" au bon node de map
+// 	  << b.getRate() << " => " // idem => utiliser les iterateurs !
+// 	  << b.getRes() << std::endl;
+// 	return (o);
+// }
 
-char*	BitCoin::findRate(std::string line)
-{
-	char	*nb;
-	size_t	size;
+// char*	BitCoin::findRate(std::string line)
+// {
+// 	char	*nb = NULL;
+// 	size_t	size;
 
-	for(int i = 10; i < line.size(); i++)
-	{
-		size = line.size() - 10;
-		if (line[i] >= '0' && line[i] <= '9')
-		{
-			line.copy(nb, size, i);
-			break ;
-		}
-	}
-	return (nb);
-}
+// 	for(size_t i = 10; i < line.size(); i++)
+// 	{
+// 		size = line.size() - 10;
+// 		if (line[i] >= '0' && line[i] <= '9')
+// 		{
+// 			line.copy(nb, size, i);
+// 			break ;
+// 		}
+// 	}
+// 	return (nb);
+// }
 
-float	BitCoin::checkRate(char *r)
+float	BitCoin::checkRate(std::string r)
 {
 	int i(0);
 	int flag(0);
 	
+	std::cout << r[0] << std::endl;
 	while (r[i] != '\0' && (r[i] == 32 || r[i] == '|')) 
 		i++;
 	while (r[i] != '\0')
@@ -84,7 +80,7 @@ float	BitCoin::checkRate(char *r)
 	}
 	if (flag > 1)
 		throw BadInput();
-	float	n = strtod(r, NULL);
+	float	n = strtod(r.c_str(), NULL);
 	if (n > 1000)
 		throw RateTooLarge();
 	return (n);
@@ -110,40 +106,30 @@ void	BitCoin::checkDate(std::string date)
 		throw BadInput();
 }
 
-//void	BitCoin::fillMap(std::string line)
-//{
-//	char 	*date;
-//	char	*r;
-//	float	rate;
-
-//	line.copy(date, 10, 0);
-//	r = findRate(line);
-//	try
-//	{
-//		checkDate(date);
-//		rate = checkRate(r);
-//		_map.emplace(date, rate);
-//	}
-//	catch(const std::exception& e)
-//	{
-//		std::cerr << "Error: "<< e.what() << '\n';
-//	}
-//}
-
-void	BitCoin::fillMap(std::ifstream file)
+void	BitCoin::fillMap(std::string date, std::string r)
 {
-	std::string date;
-	std::string 	r;
-	getline(file, date, ',');
-	getline(file, r);
 	float ex_rate = strtod(r.c_str(), NULL);
-	this->_map.emplace(date, ex_rate);
+	_map.insert(std::pair<std::string, float>(date,ex_rate));
 }
 
-float	BitCoin::getRes(void) const // or int/float return.
+void        BitCoin::printRate(std::string date, std::string rate)
 {
-	return (_res);
+	try
+	{
+		float	r = checkRate(rate);
+		checkDate(date);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 }
+
+// float	BitCoin::getRes(void) const // or int/float return.
+// {
+// 	return (_res);
+// }
 
 //bool	BitCoin::checkLine(std::string line)
 //{

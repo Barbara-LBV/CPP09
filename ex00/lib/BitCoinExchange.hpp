@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitCoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/01 18:54:08 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:37:51 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,26 @@
 # define BLUE "\001\033[1;36m\002"
 # define YELLOW "\001\033[1;93m\002"
 
-class BitCoin //: public std::map
+class BitCoin
 {
     private :
-        std::map<char *, float>  _map;
+        std::map<std::string, float>  _map;
   
     public :
         BitCoin();
-        BitCoin(float rate);
         BitCoin(BitCoin const &b);
         BitCoin &operator=(BitCoin const &b);
         ~BitCoin();
 
-        //void	      fillMap(std::string line);
-        void	      fillMap(std::ifstream file);
+        void	      fillMap(std::string date, std::string r);
         bool	      checkLine(std::string line);
         void	      checkDate(std::string date);
-        float		    checkRate(char *r);
+        float		    checkRate(std::string r);
         char	      *findRate(std::string line);
         std::string	getDate(void)const;
         float       getRate(void)const;
         float       getRes(void) const;
+        void        printRate(std::string date, std::string rate);
 
     class BadInput : public std::exception
     {

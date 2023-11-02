@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:25:26 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/01 18:55:58 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/02 16:34:41 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,24 +26,33 @@ int main(int ac, char **av) // un doc sera lance en 2e arg
 		return(1);
 	}
 	BitCoin 	*b = new BitCoin();
-	std::ifstream file;
-  	file.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+	std::ifstream 	file;
+	std::string 	date;
+	std::string 	rate;
+  	file.exceptions(std::ifstream::badbit);
+	
 	try 
 	{
-		file.open("data.cvs");
-		while ()
-			b->fillMap(file);
+		file.open("data.csv");
+		while (getline(file, date, ',') && getline(file, rate))
+			b->fillMap(date, rate);
 		file.close();
 	}
-	catch (std::ifstream::failure e) {
+	catch (std::ifstream::failure &e) {
 		std::cerr << "Error with opening/reading/closing file\n";
 	}
+	
+	std::ifstream input;
+	input.exceptions(std::ifstream::badbit);
+	date = "";
+	rate = "";
 	try
 	{
-		std::ifstream input(av[1]);
-		input.exceptions ( std::ifstream::failbit | std::ifstream::badbit );
+		input.open(av[1]);
 		std::string s;
-		
+		while (getline(file, date, '|') && getline(file, rate))
+			b->printRate(date, rate);
+		input.close();
 	}
 	catch(const std::exception &e)
 	{

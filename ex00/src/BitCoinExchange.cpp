@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:42:29 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/02 16:39:46 by root             ###   ########.fr       */
+/*   Updated: 2023/11/02 17:03:50 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ float	BitCoin::checkRate(std::string r)
 	int flag(0);
 	
 	std::cout << r[0] << std::endl;
-	while (r[i] != '\0' && (r[i] == 32 || r[i] == '|')) 
+	while (r[i] != '\0' && r[i] == 32)
 		i++;
 	while (r[i] != '\0')
 	{
@@ -104,6 +104,7 @@ void	BitCoin::checkDate(std::string date)
 		throw BadInput();
 	if (date[9] < '0' && date[9] > '9')
 		throw BadInput();
+	date[10] = '\0';
 }
 
 void	BitCoin::fillMap(std::string date, std::string r)
@@ -114,16 +115,22 @@ void	BitCoin::fillMap(std::string date, std::string r)
 
 void        BitCoin::printRate(std::string date, std::string rate)
 {
+	float	r;
+	std::cout << " in printRate function " << std::endl;
 	try
 	{
-		float	r = checkRate(rate);
+		std::cout << " in try printRate function " << std::endl;
+		r = checkRate(rate);
+		std::cout << " after checkDate " << std::endl;
 		checkDate(date);
+		std::cout << " after checkRate " << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << '\n';
 	}
-	
+	r *= _map[date];
+	std::cout << date << " | " << rate << " = " << r << std::endl;
 }
 
 // float	BitCoin::getRes(void) const // or int/float return.

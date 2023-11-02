@@ -6,7 +6,7 @@
 /*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:25:26 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/02 16:34:41 by root             ###   ########.fr       */
+/*   Updated: 2023/11/02 16:52:45 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int main(int ac, char **av) // un doc sera lance en 2e arg
 	catch (std::ifstream::failure &e) {
 		std::cerr << "Error with opening/reading/closing file\n";
 	}
-	
+	std::cout <<"is out 1st catch" << std::endl;
 	std::ifstream input;
 	input.exceptions(std::ifstream::badbit);
 	date = "";
@@ -49,9 +49,12 @@ int main(int ac, char **av) // un doc sera lance en 2e arg
 	try
 	{
 		input.open(av[1]);
-		std::string s;
-		while (getline(file, date, '|') && getline(file, rate))
+		while (getline(input, date, '|') && getline(input, rate))
+		{
+			std::cout << date << std::endl;
+			std::cout << rate << std::endl;
 			b->printRate(date, rate);
+		}
 		input.close();
 	}
 	catch(const std::exception &e)

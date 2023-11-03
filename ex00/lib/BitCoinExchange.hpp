@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   BitCoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/02 16:37:51 by root             ###   ########.fr       */
+/*   Updated: 2023/11/03 18:17:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 #include <sstream>
 #include <string>
 #include <map>
-#include <stdlib.h> 
+#include <stdlib.h>
+#include <iomanip>
+#include <cstdlib>
 
 # define DEFAULT "\001\033[0;39m\002"
 # define BOLD "\001\033[1;89m\002"
@@ -39,20 +41,23 @@ class BitCoin
 
         void	      fillMap(std::string date, std::string r);
         bool	      checkLine(std::string line);
-        void	      checkDate(std::string date);
+        std::string	      checkDate(std::string date);
         float		    checkRate(std::string r);
         char	      *findRate(std::string line);
         std::string	getDate(void)const;
         float       getRate(void)const;
         float       getRes(void) const;
         void        printRate(std::string date, std::string rate);
+        bool 	      checkYear(std::string y);
+        bool 	      checkMonth(std::string m);
+        bool 	      checkDay(std::string d);
 
     class BadInput : public std::exception
     {
       public:
         virtual const char* what() const throw()
           {
-            return (YELLOW "bad input." DEFAULT);
+            return ("bad input.");
           }
     };
     class NoPositiveNb : public std::exception
@@ -60,7 +65,7 @@ class BitCoin
       public:
         virtual const char* what() const throw()
         {
-          return (YELLOW "not a positive number." DEFAULT);
+          return ("not a positive number.");
         }
     };
     class RateTooLarge : public std::exception
@@ -68,7 +73,7 @@ class BitCoin
       public:
         virtual const char* what() const throw()
         {
-          return (YELLOW "too large a number." DEFAULT);
+          return ("too large a number.");
         }
     };  
 };
@@ -95,6 +100,4 @@ ex --> 2011-01-03 => 3 = 0.9
   -si la date n'existe pas, on prend la plus proche avt ou apres. Si deux sont a 
   equidistance, prendre la date la plus basse.
   -s'il y a un prob de nombre (neg, out of range etc) cela devra etre affiche.
-
-
 */

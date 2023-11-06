@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/06 18:03:43 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 18:22:44 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@ int main(int ac, char **av) // un doc sera lance en 2e arg
 		std::cerr << "Usage: <value>" << '\n';
 		return(1);
 	}
+	
 	std::string		input = av[1];
 	RPN				*R = new RPN();
-	
-	try
+		try
 	{
 		R->checkInput(input);
 		R->operate();
@@ -31,7 +31,7 @@ int main(int ac, char **av) // un doc sera lance en 2e arg
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	
+	std::cout << R << std::endl;
 	delete R;
 	return (0);
 }

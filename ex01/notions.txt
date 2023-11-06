@@ -1,0 +1,12 @@
+*utiliser container stack
+
+*utiliser une inverted Polish mathematical expression
+	Reverse Polish notation (RPN) is a method for representing 
+	expressions in which the operator symbol is placed after 
+	the arguments being operated on. Polish notation, in which the 
+	operator comes before the operands, was invented in the 1920s by 
+	the Polish mathematician Jan Lucasiewicz.
+
+	=> Classical expression "infix" = 3 + 4
+	=> Polish notation = + 3 4 : le signe est avt les nb a additionner.
+	=> Reverse Polish notation = 3 4 + : le signe est apres les nb a additionner.

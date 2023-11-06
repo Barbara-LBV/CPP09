@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:57 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/10/27 13:16:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 17:55:06 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,49 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <stdlib.h>
+#include <iomanip>
+#include <cstdlib>
+#include <stack>
+
+# define DEFAULT "\001\033[0;39m\002"
+# define BOLD "\001\033[1;89m\002"
+# define RED "\001\033[1;91m\002"
+# define BLUE "\001\033[1;36m\002"
+# define YELLOW "\001\033[1;93m\002"
 
 class RPN
 {
-	
+	private :
+        std::stack<int>	*_stack;
+		int				_res;
+
+    public :
+        RPN();
+        RPN(RPN const &s);
+        RPN &operator=(RPN const &s);
+        ~RPN();
+
+        void	checkInput(std::string content);
+		void 	operate(void);
+		int		getRes(void)const;
+		void	setRes(int nb);
+		bool	checkStr(std::string str);
+
+    class BadInput : public std::exception
+    {
+      public:
+        virtual const char* what() const throw()
+          {
+            return ("Error: Bad input");
+          }
+    };
 };
 
-#endif
+bool isSpecChar(char c);
+std::ofstream &operator<<(std::ofstream &o, RPN &s);
 
-/*
- 	utiliser container stack
-*/
+#endif

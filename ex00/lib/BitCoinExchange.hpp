@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/03 18:17:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:22:13 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ class BitCoin
 {
     private :
         std::map<std::string, float>  _map;
+        int                           _d;
+        int                           _m;
+        int                           _y;
   
     public :
         BitCoin();
@@ -40,24 +43,21 @@ class BitCoin
         ~BitCoin();
 
         void	      fillMap(std::string date, std::string r);
-        bool	      checkLine(std::string line);
-        std::string	      checkDate(std::string date);
-        float		    checkRate(std::string r);
-        char	      *findRate(std::string line);
-        std::string	getDate(void)const;
-        float       getRate(void)const;
-        float       getRes(void) const;
+        std::string	checkDate(std::string date);
         void        printRate(std::string date, std::string rate);
         bool 	      checkYear(std::string y);
         bool 	      checkMonth(std::string m);
         bool 	      checkDay(std::string d);
+        void	      findDate(std::string date, float val);
+        std::string decreaseDate(void);
+        void        convert(std::string input);
 
     class BadInput : public std::exception
     {
       public:
         virtual const char* what() const throw()
           {
-            return ("bad input.");
+            return ("Bad input.");
           }
     };
     class NoPositiveNb : public std::exception
@@ -77,8 +77,6 @@ class BitCoin
         }
     };  
 };
-
-std::ostream &operator<<( std::ostream &o, BitCoin &b);
 
 #endif
 

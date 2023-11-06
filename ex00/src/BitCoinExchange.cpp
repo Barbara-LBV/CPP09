@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:42:29 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/03 18:31:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 14:56:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,41 +47,30 @@ std::string	BitCoin::checkDate(std::string date)
 		throw BadInput();
 	if (getline(s, day) && checkDay(day) == false)
 		throw BadInput();
-	//std::string d = "";
-	//d.replace(0, 10, date, 0, 10);
-	//if (d[0] != '2')
-	//	throw BadInput();
-	//if (d[1] != '0')
-	//	throw BadInput();
-	//if (!(d[2] >= '0' && d[2] <= '2'))
-	//	throw BadInput();
-	//if (!(d[3] >= '0' && d[3] <= '9'))
-	//	throw BadInput();
-	//if (d[4] != '-' || d[7] != '-')
-	//	throw BadInput();
-	//if (!(d[5] >= '0' && d[5] < '2'))
-	//	throw BadInput();
-	//if (!(d[6] >= '0' && d[6] <= '9'))
-	//	throw BadInput();
-	//if (!(d[8] >= '0' && d[8] <= '3'))
-	//	throw BadInput();
-	//if (!(d[9] >= '0' && d[9] <= '9'))
-	//	throw BadInput();
 	return(date);
 }
 
 bool 	BitCoin::checkYear(std::string y)
 {
+	_y = atoi(y.c_str());
+	if (_y < 2009 || _y > 2022)
+		return (false);
 	return (true);
 }
 
 bool 	BitCoin::checkMonth(std::string m)
 {
+	_m = atoi(m.c_str());
+	if (_m < 1 || _m > 12)
+		return (false);
 	return (true);
 }
 
 bool 	BitCoin::checkDay(std::string d)
 {
+	_d = atoi(d.c_str());
+	if (_d < 1 || _d > 31)
+		return (false);
 	return (true);
 }
 
@@ -102,52 +91,83 @@ void        BitCoin::printRate(std::string date, std::string rate)
 			throw RateTooLarge();
 		if (r <= 0)
 			throw NoPositiveNb();
-		// fonction qui verifie que la date de l'input existe bien dans la Database
-		r *= _map[date];
-		std::cout << date << " | " << rate << " = " << r << std::endl;
+		findDate(date, r);
 	}
 	catch(const std::exception& e)
 	{
 		if (dynamic_cast<const NoPositiveNb*>(&e) != NULL || dynamic_cast<const RateTooLarge*>(&e) != NULL)
-            std::cerr << rate << " => " << e.what() << '\n';
+            std::cerr << YELLOW "Error: " << e.what() << DEFAULT << std::endl;
 		else
-			std::cerr << date << " => " << e.what() << '\n';
+			std::cerr << RED << date << " => " << e.what() << DEFAULT << std::endl;
 	}
 }
-/*
-void BitcoinExchange::findDate(std::string date, float val)
+
+void 	BitCoin::findDate(std::string date, float val)
 {
-	if (ratesMap.find(date) != ratesMap.end())
+	std::stringstream s(date);
+	
+	if (_map.find(date) != _map.end())
 	{
-		float result = val * ratesMap[date];
-		std::cout << date << " => " << std::fixed << std::setprecision(2) << val << " = " << result << std::endl;
+		float result = val * _map[date];
+		std::cout << date << " => " << val << " = " << result << std::endl;
 		return ;
 	}
 	else
 	{
-		date = decreaseDate(date);
+		date = decreaseDate();
 		findDate(date, val);
 	}
 }
 
-++++ fonctions en sus +++++
+std::string BitCoin::decreaseDate(void)
+{
+	std::string			newDate;
+	std::stringstream 	conc;
+	
+	if (_d > 1)
+		_d--;
+	else if (_m > 1)
+	{
+		_m--;
+		if (_m <= 7 && _m % 2 != 0)
+			_d = 31;
+		else if ((_m >= 8 && _m <= 12) && _m % 2 == 0)
+			_d = 31;
+		else
+			_d = 30;
+	}
+	else
+	{
+		_y--;
+		_m = 12;
+		_d = 31;
+	}
+	conc << _y << '-' << std::setw(2) << std::setfill('0') << _m << '-' << std::setw(2) << std::setfill('0') << _d;
+	newDate = conc.str();
+	return (newDate);
+}
 
-checkDate ( qui verifie le format et la validite de year, month et day)
- ->checkDay
- ->checkYear
- ->checkMonth
- 
-+ fonction decreaseDate;
-
-revoir aussi le parsing en utilisant davantage les fonctions de std::string
-
-*/
-
-
-// std::ostream &operator<<( std::ostream &o, BitCoin &b)
-// {
-// 	o << b.getDate() << " | "   // a ne suffira sans doute pas a recuperer la valeur "date" au bon node de map
-// 	  << b.getRate() << " => " // idem => utiliser les iterateurs !
-// 	  << b.getRes() << std::endl;
-// 	return (o);
-// }
+//void        BitCoin::convert(std::ifstream input)
+//{
+//	std::string::iterator 	it;
+//	std::string				content;
+	
+//	for (it != input.end())
+//	{
+//		getline(input, s);
+//		{
+//			while (!(*it >= 0 && *it <= '9'))
+//				i++;
+//			date = s.substr(i, 10);
+//			i += 11;
+//			while (s[i] && !(s[i] >= 0 && s[i] <= '9') && s[i] != '-')
+//				i++;
+//			if (i < s.size())
+//				rate = s.substr(i);
+//			b->printRate(date, rate);
+//			date.clear();
+//			rate.clear();
+//			i = 0;
+//		}
+//	}
+//}

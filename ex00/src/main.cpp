@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:25:26 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/03 18:29:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:29:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ int main(int ac, char **av)
 		return(1);
 	}
 	BitCoin 		*b = new BitCoin();
-	std::ifstream 	file;
-	std::string 	date, rate;
+	std::ifstream 	file, input;
+	std::string 	date, rate, s, content;
   	file.exceptions(std::ifstream::badbit);
 	try 
 	{
@@ -36,19 +36,21 @@ int main(int ac, char **av)
 			b->fillMap(date, rate);
 		file.close();
 	}
-	catch (std::ifstream::failure &e) {
-		std::cerr << "Error with opening/reading/closing file\n";
+	catch (std::ifstream::failure &e)
+	{
+		std::cerr << RED "Error with opening,reading or closing file" << std::endl;;
 	}
-	std::ifstream input;
-	input.exceptions(std::ifstream::badbit);
-	std::string s;
-	size_t i(0);
+	input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try
 	{
 		input.open(av[1]);
+		getline(input, s);
+		if (s.compare("date | value") != 0)
+			throw BitCoin::BadInput();
 		while (getline(input, s))
 		{
-			while (s[i] && !(s[i] >= 0 && s[i] <= '9'))
+			size_t i(0);
+			while (s[i] && s[i] == 32)
 				i++;
 			date = s.substr(i, 10);
 			i += 11;
@@ -59,13 +61,13 @@ int main(int ac, char **av)
 			b->printRate(date, rate);
 			date.clear();
 			rate.clear();
-			i = 0;
+			if (input.eof())
+				break ;
 		}
-		input.close();
 	}
 	catch(const std::exception &e)
 	{
-		std::cerr << "Error with opening/reading/closing file\n";
+		std::cerr << RED << e.what() << DEFAULT << std::endl;
 	}
 	delete b;
 	return (0);

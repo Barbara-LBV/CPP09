@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/07 17:52:12 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/07 18:07:56 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,18 @@ int main(int ac, char **av)
 	{
 		R->checkInput(input);
 		R->operate(input, *R);
+		std::cout << *R << std::endl;
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
-	std::cout << *R << std::endl;
 	delete R;
 	return (0);
 }
+
+/*
+	checker l'exemple 2 du sujet (demander a Hinda/Imen)
+	que faire si deux operateurs se suivent ?
+	
+*/

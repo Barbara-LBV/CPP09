@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:41:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/07 17:51:42 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/07 18:02:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,17 +114,17 @@ std::string	RPN<T>::fillStack(std::string input, RPN<T> &r)
 			nb = atoi(tmp.c_str());
 			r.push(nb);
 			tmp.erase(0);
-			std::cout << r.top() << std::endl;
+			std::cout << r.top() << std::endl; //a enlever
 		}
 		else if (isSpecChar(input[i]))
 		{
 			_op = input[i];
-			std::cout << "op= "<< _op << std::endl;
+			std::cout << "op= "<< _op << std::endl; //a enlever
 			input.erase(0, ++i);
 			break ;
 		}
 	}
-	std::cout << "new input= "<< input << std::endl;
+	std::cout << "new input= "<< input << std::endl; // a enlever
 	return (input);
 }
 
@@ -133,7 +133,7 @@ void 	RPN<T>::operate(std::string input, RPN<T> &r)
 {
 	size_t i(0);
 	
-	for ( ;i < input.size(); i++)
+	for (; i < input.size(); i++)
 	{
 		if (input.size() == 0)
 			break ;
@@ -144,7 +144,7 @@ void 	RPN<T>::operate(std::string input, RPN<T> &r)
 }
 
 template<typename T>
-int	RPN<T>::operateNb(RPN<T> &r)
+int	RPN<T>::operateNb(RPN<T> &r) // a completer
 {
 	int	nb(0);
 	(void)r;

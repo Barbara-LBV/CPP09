@@ -1,12 +1,11 @@
 # Variables
 COMP 	= c++
-FLAGS 	= -Wall -Wextra -Werror -std=c++98
+FLAGS 	= -Wall -Wextra -Werror -std=c++98 -g3
 NAME	= RPN
 
 # Source files list
 SRCS_DIR 	= src/
-SRCS_NAME 	= main.cpp \
-			RPN.cpp
+SRCS_NAME 	= main.cpp
 
 SRCS		= $(wildcard $(SRCS_DIR)*.cpp)
 

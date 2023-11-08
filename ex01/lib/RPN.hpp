@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:57 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/08 14:00:10 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:44:40 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,12 @@
 # define RED "\001\033[1;91m\002"
 # define BLUE "\001\033[1;36m\002"
 
-class iterator;
-
-template <typename T>
-class RPN : public std::stack<T>
+class RPN
 {
 	private :
-        typedef typename std::stack<T>::container_type::iterator iterator;
-		    iterator	begin(void);
-		    iterator	end(void); 
-
 		    int				      _res;
         std::string     _op;
+        std::stack<int> _stack;
 
     public :
         RPN();
@@ -47,11 +41,11 @@ class RPN : public std::stack<T>
         ~RPN();
 
         void	      checkInput(std::string content);
-        std::string	fillStack(std::string input, RPN<T> &r);
-        void 	      operate(std::string input, RPN<T> &r);
-        void        operateRes(RPN<T> &r);
+        std::string	fillStack(std::string input);
+        void 	      operate(std::string input);
+        void        operateRes(void);
         int	        findRes(int n1, int n2);
-        int		      const &getRes(void)const;
+        int const   &getRes(void)const;
         void	      setRes(int nb);
 
     class BadInput : public std::exception
@@ -66,7 +60,6 @@ class RPN : public std::stack<T>
 
 bool isSpecChar(char c);
 
-template <typename T>
-std::ofstream &operator<<(std::ofstream &o, RPN<T> &s);
+std::ostream &operator<<(std::ostream &o, RPN &s);
 
 #endif

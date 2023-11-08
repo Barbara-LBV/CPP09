@@ -1,0 +1,26 @@
+=> utiliser l'Algo Ford-Johnson
+
+=> utiliser deux containers
+
+=> jusqu'a 3000 entiers peuvent etre tries
+
+=> pas de nb negatifs ou decimaux
+
+=> indiquer le temps qu'a mis le prog a trier
+
+Parsing
+ 	-> pas de nb negatifs
+ 	-> pas de char non digitaux
+ 	-> unsigned int : gerer les overflows pos (les nb signes positifs n'existent pas)
+ 	-> plus de 2 arg (ac > 2 && <= 3 000) : l'exec + au moins 2 nb
+ 	-> arret s'il n'y a qu'un nb en argument 
+ 	(un nb n'est pas suffisant pour faire un tri)
+	-> indiquer si la liste est deja triee ?
+	-> l'input est a stocker dans un container vector (parser avant ou apres le stockage ?)
+
+Utils
+ -> 
+
+Algo
+ ->
+

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/06 15:22:13 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/06 15:56:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 #include <fstream>
 #include <sstream>
 #include <string>
-#include <map>
 #include <stdlib.h>
 #include <iomanip>
 #include <cstdlib>
+#include <map>
 
 # define DEFAULT "\001\033[0;39m\002"
 # define BOLD "\001\033[1;89m\002"

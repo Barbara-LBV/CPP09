@@ -6,11 +6,11 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/07 18:07:56 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:43:15 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../lib/RPN.cpp"
+#include "../lib/RPN.hpp"
 
 int main(int ac, char **av)
 {
@@ -25,11 +25,11 @@ int main(int ac, char **av)
 		std::cerr << "Bad Input: argument empty or too short to operate." << '\n';
 		return(2);
 	}
-	RPN<int>		*R = new RPN<int>();
+	RPN		*R = new RPN();
 	try
 	{
 		R->checkInput(input);
-		R->operate(input, *R);
+		R->operate(input);
 		std::cout << *R << std::endl;
 	}
 	catch(const std::exception& e)
@@ -39,9 +39,3 @@ int main(int ac, char **av)
 	delete R;
 	return (0);
 }
-
-/*
-	checker l'exemple 2 du sujet (demander a Hinda/Imen)
-	que faire si deux operateurs se suivent ?
-	
-*/

@@ -6,60 +6,54 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:41:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/08 13:59:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:44:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "RPN.hpp"
+#include "../lib/RPN.hpp"
 
-template<typename T>
-RPN<T>::RPN()
+RPN::RPN()
 {
 	std::cout << BLUE "Default constructor -> called" DEFAULT << std::endl;
 	_res = 0;
 	_op = "";
 }
 
-template<typename T>
-RPN<T>::RPN(RPN const &s)
+RPN::RPN(RPN const &s)
 {
 	std::cout << BLUE "Copy constructor -> called" DEFAULT << std::endl;
 	*this = s;
 }
 
-template<typename T>
-RPN<T> &RPN<T>::operator=(RPN<T> const &s)
+RPN &RPN::operator=(RPN const &s)
 {
 	std::cout << BLUE "Assignment operator -> called" DEFAULT << std::endl;
 	if (this != &s)
 	{
 		_res =s._res;
 		_op = s._op;
+		_stack = s._stack;
 	}
 	return (*this);
 }
 
-template<typename T>
-RPN<T>::~RPN()
+RPN::~RPN()
 {
 	std::cout << BLUE "Destructor -> called" DEFAULT << std::endl;
 }
 
-template<typename T>
-std::ostream &operator<<(std::ostream &o, RPN<T> &s)
+std::ostream &operator<<(std::ostream &o, RPN &s)
 {
 	o << s.getRes();
 	return (o);
 }
 
-template<typename T>
-int	const	&RPN<T>::getRes(void)const
+int	const	&RPN::getRes(void)const
 {
 	return(_res);
 }
 
-template<typename T>
-void	RPN<T>::setRes(int nb)
+void	RPN::setRes(int nb)
 {
 	_res = nb;
 }
@@ -71,8 +65,7 @@ bool	isSpecChar(char c)
 	return true;
 }
 
-template<typename T>
-void	RPN<T>::checkInput(std::string str)
+void	RPN::checkInput(std::string str)
 {
 	std::string::iterator	it = str.begin();
 	std::string::iterator	ite = str.end();
@@ -91,7 +84,7 @@ void	RPN<T>::checkInput(std::string str)
 			flag1 = 0;
 		else if (flag1 == 0 && *it == 32)
 			flag1 = 1;
-		if (isdigit(*(it-1)) && isdigit(*it))
+		if (it+1 != ite && isdigit(*it) && isdigit(*(it+1)))
 			throw BadInput();
 		++it;
 	}
@@ -99,8 +92,7 @@ void	RPN<T>::checkInput(std::string str)
 		throw BadInput();
 }
 
-template<typename T>
-std::string	RPN<T>::fillStack(std::string input, RPN<T> &r)
+std::string	RPN::fillStack(std::string input)
 {
 	int			nb;
 	size_t		i(0);
@@ -112,7 +104,7 @@ std::string	RPN<T>::fillStack(std::string input, RPN<T> &r)
 		{
 			tmp.push_back(input[i]);
 			nb = atoi(tmp.c_str());
-			r.push(nb);
+			_stack.push(nb);
 			tmp.erase(0);
 		}
 		else if (isSpecChar(input[i]))
@@ -125,8 +117,7 @@ std::string	RPN<T>::fillStack(std::string input, RPN<T> &r)
 	return (input);
 }
 
-template<typename T>
-void 	RPN<T>::operate(std::string input, RPN<T> &r)
+void 	RPN::operate(std::string input)
 {
 	size_t i(0);
 	
@@ -134,14 +125,13 @@ void 	RPN<T>::operate(std::string input, RPN<T> &r)
 	{
 		if (input.size() == 0)
 			break ;
-		input = fillStack(input, r);
-		operateRes(r);
+		input = fillStack(input);
+		operateRes();
 		i = 0;
 	}
 }
 
-template<typename T>
-int	RPN<T>::findRes(int n1, int n2)
+int	RPN::findRes(int n1, int n2)
 {
 	int		res;
 	size_t	i;
@@ -171,15 +161,14 @@ int	RPN<T>::findRes(int n1, int n2)
 	return(res);
 }
 
-template<typename T>
-void	RPN<T>::operateRes(RPN<T> &r)
+void	RPN::operateRes(void)
 {
 	int	res, n1, n2;
 	
-	n1 = r.top();
-	r.pop();
-	n2 = r.top();
-	r.pop();
+	n1 = _stack.top();
+	_stack.pop();
+	n2 = _stack.top();
+	_stack.pop();
 	res = findRes(n1, n2);
-	r.push(res);
+	_stack.push(res);
 }

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:57 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/07 17:34:17 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/08 14:00:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ class RPN : public std::stack<T>
 		    iterator	end(void); 
 
 		    int				      _res;
-        char            _op;
+        std::string     _op;
 
     public :
         RPN();
@@ -49,7 +49,8 @@ class RPN : public std::stack<T>
         void	      checkInput(std::string content);
         std::string	fillStack(std::string input, RPN<T> &r);
         void 	      operate(std::string input, RPN<T> &r);
-        int	        operateNb(RPN<T> &r);
+        void        operateRes(RPN<T> &r);
+        int	        findRes(int n1, int n2);
         int		      const &getRes(void)const;
         void	      setRes(int nb);
 

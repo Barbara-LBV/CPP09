@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:41:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/07 18:02:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/08 13:59:31 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ RPN<T>::RPN()
 {
 	std::cout << BLUE "Default constructor -> called" DEFAULT << std::endl;
 	_res = 0;
-	_op = '\0';
+	_op = "";
 }
 
 template<typename T>
@@ -114,17 +114,14 @@ std::string	RPN<T>::fillStack(std::string input, RPN<T> &r)
 			nb = atoi(tmp.c_str());
 			r.push(nb);
 			tmp.erase(0);
-			std::cout << r.top() << std::endl; //a enlever
 		}
 		else if (isSpecChar(input[i]))
 		{
 			_op = input[i];
-			std::cout << "op= "<< _op << std::endl; //a enlever
 			input.erase(0, ++i);
 			break ;
 		}
 	}
-	std::cout << "new input= "<< input << std::endl; // a enlever
 	return (input);
 }
 
@@ -138,15 +135,51 @@ void 	RPN<T>::operate(std::string input, RPN<T> &r)
 		if (input.size() == 0)
 			break ;
 		input = fillStack(input, r);
-		_res = operateNb(r);
+		operateRes(r);
 		i = 0;
 	}
 }
 
 template<typename T>
-int	RPN<T>::operateNb(RPN<T> &r) // a completer
+int	RPN<T>::findRes(int n1, int n2)
 {
-	int	nb(0);
-	(void)r;
-	return(nb);
+	int		res;
+	size_t	i;
+	std::string tab[] = {"+", "-", "*", "/"};
+
+	for(i = 0; i < 4; i++)
+	{
+		if (tab[i] == _op)
+			break ;
+	}
+	switch (i)
+	{
+	case 0:
+		res = n2 + n1;
+		break;
+	case 1:
+		res = n2 - n1;
+		break;
+	case 2:
+		res = n2 * n1;
+		break;
+	case 3:
+		res = n2 / n1;
+		break;
+	}
+	setRes(res);
+	return(res);
+}
+
+template<typename T>
+void	RPN<T>::operateRes(RPN<T> &r)
+{
+	int	res, n1, n2;
+	
+	n1 = r.top();
+	r.pop();
+	n2 = r.top();
+	r.pop();
+	res = findRes(n1, n2);
+	r.push(res);
 }

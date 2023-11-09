@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:57 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/08 14:44:40 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/09 10:47:30 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ class RPN
         virtual const char* what() const throw()
           {
             return (RED "Error: Bad input" DEFAULT);
+          }
+    };
+    class CantOperate : public std::exception
+    {
+      public:
+        virtual const char* what() const throw()
+          {
+            return (RED "Error: not enough operand to finish operation" DEFAULT);
           }
     };
 };

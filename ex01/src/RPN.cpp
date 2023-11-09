@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:41:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/08 14:44:09 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/09 10:44:41 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ std::string	RPN::fillStack(std::string input)
 			break ;
 		}
 	}
+	if (_op.size() == 0)
+		throw CantOperate();
 	return (input);
 }
 
@@ -128,6 +130,7 @@ void 	RPN::operate(std::string input)
 		input = fillStack(input);
 		operateRes();
 		i = 0;
+		_op = "";
 	}
 }
 
@@ -144,18 +147,18 @@ int	RPN::findRes(int n1, int n2)
 	}
 	switch (i)
 	{
-	case 0:
-		res = n2 + n1;
-		break;
-	case 1:
-		res = n2 - n1;
-		break;
-	case 2:
-		res = n2 * n1;
-		break;
-	case 3:
-		res = n2 / n1;
-		break;
+		case 0:
+			res = n2 + n1;
+			break;
+		case 1:
+			res = n2 - n1;
+			break;
+		case 2:
+			res = n2 * n1;
+			break;
+		case 3:
+			res = n2 / n1;
+			break;
 	}
 	setRes(res);
 	return(res);

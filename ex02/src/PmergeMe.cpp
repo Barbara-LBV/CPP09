@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:44:24 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/10 16:30:32 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/10 17:52:53 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ void	PmergeMe::printAll(void)
 	printSortedNb();
 }
 
-void	PmergeMe::vectorMerge(int left, int middle, int right) //a adapter en vector
+void	PmergeMe::vectorMerge(int left, int middle, int right)
 {
 	int s1 = middle - left + 1;
     int s2 = right - middle;
@@ -174,22 +174,23 @@ void	PmergeMe::vectorMergeSort(int left, int right)
 
 void	PmergeMe::listMerge(int left, int middle, int right) //a adapter en list
 {
-
-   // int s1 = middle - left + 1;
+    int s1 = middle - left + 1;
 	int s2 = right - middle;
+	std::list<int> leftTab, rightTab;
 
-	std::list<int> leftTab(_unsortedVect.begin() + left, _unsortedVect.begin() + middle + 1);
-    std::list<int> rightTab(_unsortedVect.begin() + middle + 1, _unsortedVect.begin() + middle + 1 + s2);
-
-	//std::vector<int>::const_iterator	it = _unsortedVect.begin() + left;
-	std::list<int>::const_iterator		it1 = leftTab.begin();
-	std::list<int>::const_iterator		it2 = rightTab.begin();
+	for (int i = 0; i < s1; i++)
+		leftTab.push_back(_unsortedVect[left + i]);
+    for (int j = 0; j < s2; j++)
+		rightTab.push_back(_unsortedVect[middle + 1 + j]);
+	std::list<int>::const_iterator	it = _lst.begin() + left;
+	std::list<int>::const_iterator	it1 = leftTab.begin();
+	std::list<int>::const_iterator	it2 = rightTab.begin();
 	
     while (it1 != leftTab.end() && it2 != rightTab.end()) 
 	{
         if (*it1 <= *it2) 
 		{
-            _lst.push_back(*it1);
+            _lst.insert(it, *it1);
             ++it1;
         } 
 		else 
@@ -197,7 +198,7 @@ void	PmergeMe::listMerge(int left, int middle, int right) //a adapter en list
             _lst.push_back(*it2);
             ++it2;
         }
-		left++;
+		++it;
     }
     while (it1 != leftTab.end()) 
 	{
@@ -230,7 +231,10 @@ void	PmergeMe::merge(void)
 	int r = _nElement;
 	std::vector<int>	tmp = _unsortedVect;
 	for (size_t i = 0; i < _unsortedVect.size(); i++)
+	{
 		_vect.push_back(_unsortedVect[i]);
+		_lst.push_back(_unsortedVect[i]);
+	}
 	vectorMergeSort(0, r - 1);
 	listMergeSort(0, r - 1);
 }

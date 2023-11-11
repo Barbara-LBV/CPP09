@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:45:07 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/09 18:28:11 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/11 18:19:12 by root             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ class PmergeMe
         float	const &getTimeV(void)const;
         float	const &getTimeL(void)const;
         int	const   &getElement(void)const;
-        int const   &getListValue(std::list<int> l, int idx)const;
+        int const   &getListValue(int idx)const;
         void        setValueOfList(int idx, int value);
         void	      checkInput(int ac, char **av);
         void        vectorMerge(int l, int m, int r);

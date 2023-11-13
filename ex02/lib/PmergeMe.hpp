@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:45:07 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/11 18:19:12 by root             ###   ########.fr       */
+/*   Updated: 2023/11/13 18:15:05 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,30 @@
 # define PMERGEME_HPP
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <string>
 #include <stdlib.h>
-#include <iomanip>
 #include <cstdlib>
 #include <vector>
+#include <deque>
 #include <list>
+#include <ctime>
 
 # define DEFAULT "\001\033[0;39m\002"
 # define BOLD "\001\033[1;89m\002"
 # define RED "\001\033[1;91m\002"
 # define BLUE "\001\033[1;36m\002"
 # define YELLOW "\001\033[1;93m\002"
+# define INT_MAX 4294967200
 
 class PmergeMe
 {
 	private :
-        std::vector<int> 	_unsortedVect;
-        std::vector<int> 	_vect;
-        std::list<int>	  _lst;
-        float				      _vTime;
-        float				      _lTime;
-        size_t				    _nElement;
+        std::vector<unsigned int> _unsortedVect;
+        std::vector<unsigned int> _vect;
+        std::deque<unsigned int> 	_deque;
+        float				              _vTime;
+        float				              _dTime;
+        size_t				            _nElement;
 
     public :
         PmergeMe();
@@ -45,28 +45,25 @@ class PmergeMe
         PmergeMe &operator=(PmergeMe const &p);
         ~PmergeMe();
 
-        float	const &getTimeV(void)const;
-        float	const &getTimeL(void)const;
-        int	const   &getElement(void)const;
-        int const   &getListValue(int idx)const;
-        void        setValueOfList(int idx, int value);
-        void	      checkInput(int ac, char **av);
-        void        vectorMerge(int l, int m, int r);
-        void        vectorMergeSort(int l, int r);
-        void        listMerge(int l, int m, int r);
-        void        listMergeSort(int l, int r);
-        void        merge(void);
-        void        printSortedNb(void)const;
-        void        printUnsortedNb(void)const;
-        void	      printAll(void);
+        float	const     &getTimeV(void)const;
+        float	const     &getTimeD(void)const;
+        size_t	const   &getElement(void)const;
+        void	          checkInput(int ac, char **av);
+        void            vectorMerge(int l, int m, int r);
+        void            vectorMergeSort(int l, int r);
+        void            dequeMerge(int l, int m, int r);
+        void            dequeMergeSort(int l, int r);
+        void            merge(void);
+        void            printSortedNb(void)const;
+        void            printUnsortedNb(void)const;
+        void	          printAll(void);
   
-		
     class BadInput : public std::exception
     {
       public:
         virtual const char* what() const throw()
           {
-            return ("Bad input");
+            return (RED "Bad input" DEFAULT);
           }
     };
 };

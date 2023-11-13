@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: root <root@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:44:24 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/11 18:20:15 by root             ###   ########.fr       */
+/*   Updated: 2023/11/13 18:36:27 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ PmergeMe::PmergeMe()
 {
 	std::cout << BLUE "Default constructor -> called" DEFAULT << std::endl;
 	_vTime = 0;
-	_lTime = 0;
+	_dTime = 0;
 	_nElement = 0;
 }
 
@@ -32,9 +32,9 @@ PmergeMe &PmergeMe::operator=(PmergeMe const &p)
 	if (this != &p)
 	{
 		_vect = p._vect;
-		_lst = p._lst;
+		_deque = p._deque;
 		_vTime = p._vTime;
-		_lTime = p._lTime;
+		_dTime = p._dTime;
 		_nElement = p._nElement;
 	}
 	return (*this);
@@ -45,88 +45,78 @@ PmergeMe::~PmergeMe()
 	std::cout << BLUE "Destructor -> called" DEFAULT << std::endl;
 }
 
-//std::ostream &operator<<(std::ostream &o, PmergeMe &p)
-//{
-//	o << " Time to process a range of " << p.getTimeL()
-//	  << " elements with std::list :" << p.getTimeL() 
-//	  << "us" << std::endl;
-//	return (o);
-//}
-
-//float const &PmergeMe::getTimeV(void)const
-//{
-	
-//}
-
-//float const &PmergeMe::getTimeL(void)const
-//{
-	
-//}
-
-//int	const   &PmergeMe::getElement(void)const
-//{
-	
-//}
-
-int const   &PmergeMe::getListValue(int idx)const
+std::ostream &operator<<(std::ostream &o, PmergeMe &p)
 {
-	std::list<int> tmpList;
-
-	tmpList.assign(_lst.begin(), _lst.end());
-	std::list<int>::iterator iter = tmpList.begin();
-	while (idx--) 
-		++iter;
-	return *iter;
+	o << "Time to process a range of " << p.getElement()
+	  << " elements with std::vector: " << p.getTimeV() 
+	  << " us" << std::endl
+	  << "Time to process a range of " << p.getElement()
+	  << " elements with std::deque: " << p.getTimeD() 
+	  << " us" << std::endl;
+	return (o);
 }
 
-void	PmergeMe::setValueOfList(int idx, int value)
+float const &PmergeMe::getTimeV(void)const
 {
-	std::list<int>::iterator iter = this->listData.begin();
-  	while (idx--) 
-  		++iter;
-  	*iter = value;	
+	return (_vTime);
+}
+
+float const &PmergeMe::getTimeD(void)const
+{
+	return (_dTime);
+}
+
+size_t const &PmergeMe::getElement(void)const
+{
+	return (_nElement);
 }
 
 void	PmergeMe::checkInput(int ac, char **av)
 {
-	std::string	s;
+	std::string		s;
+	unsigned int	nb;
 	
 	for (int i = 1; i < ac; i++)
 	{
 		s = av[i];
 		std::size_t found = s.find_first_not_of("0123456789");
-		if (found != std::string::npos)
+		if (found != std::string::npos || s.size() > 10)
+			throw BadInput();
+		if ((s.size() >= 10 && s[0] > '4') || (s.size() == 10 && s[0] == '4' && s[1] >= '2'))
 			throw BadInput();
 	}
 	for (int i = 1; i < ac; i++)
-		_unsortedVect.push_back(static_cast<unsigned int>(strtod(av[i], NULL)));
+	{
+		nb = static_cast<unsigned int>(strtod(av[i], NULL));
+		if (nb > INT_MAX)
+			throw BadInput();
+		_unsortedVect.push_back(nb);
+	}
 	_nElement = ac - 1;
 }
 
 void	PmergeMe::printSortedNb(void)const
 {
-	//std::cout << "****** Vector ******" << std::endl;
-	//std::vector<int>::const_iterator	it = _vect.begin();
-	//while (it != _vect.end())
-	//{
-	//	std::cout << *it << " ";
-	//	++it;
-	//}
-	//std::cout <<std::endl;
-	
-	std::cout << "****** List ******" << std::endl;
-	std::list<int>::const_iterator it1 = _lst.begin();
-	while (it1 != _lst.end())
+	std::cout << "****** Vector ******" << std::endl;
+	std::vector<unsigned int>::const_iterator	it = _vect.begin();
+	while (it != _vect.end())
 	{
-		std::cout << *it1 << " ";
-		++it1;
+		std::cout << *it << " ";
+		++it;
+	}
+	std::cout <<std::endl;
+	
+	std::cout << "****** Deque ******" << std::endl;
+	for (size_t i = 0; i < _deque.size(); i++)
+	{
+		std::cout << _deque[i] << " ";
 	}
 	std::cout <<std::endl;
 }
 
 void	PmergeMe::printUnsortedNb(void)const
 {
-	std::vector<int>::const_iterator	it = _unsortedVect.begin();
+	std::vector<unsigned int>::const_iterator	it = _unsortedVect.begin();
 	
 	while (it != _unsortedVect.end())
 	{
@@ -174,101 +164,63 @@ void	PmergeMe::vectorMergeSort(int left, int right)
     if (left < right) 
 	{
         int middle = left +(right - left) / 2;
-       	vectorMerge(left, middle, right );
 	    vectorMergeSort(left, middle);
         vectorMergeSort(middle + 1, right);
 		vectorMerge(left, middle, right );
     }
 }
 
-void	PmergeMe::listMerge(int left, int middle, int right) //a adapter en list
+void	PmergeMe::dequeMerge(int left, int middle, int right)
 {
-    // int s1 = middle - left + 1;
-	// int s2 = right - middle;
-	std::list<int> leftTab, rightTab;
+	int s1 = middle - left + 1;
+    int s2 = right - middle;
+	int i , j, k;
+    std::deque<int> leftTab, rightTab;
 
-	std::cout << "left= " << left << ", middle= " << middle << ", right= " << right << '\n';
-	std::list<int>::iterator	it = _lst.begin();
-	std::list<int>::iterator	ite1 = _lst.begin();
-	std::list<int>::iterator	ite2 = _lst.begin();
-	std::advance(ite1, middle + 1);
-	while (it != _lst.end())
-	{
-		std::cout << *it << " ";
-		++it;
-	}
-	it = _lst.begin();
-	while (it != ite1)
-	{
-		leftTab.push_back(*it);
-		//std::cout << "in leftTab, it = " << *it << '\n';
-		++it;
-	}
-	std::advance(ite2, right + 1);
-	std::cout << "value of it after filling of leftTab= " << *it << '\n';
-    while (it != ite2)
-	{
-		rightTab.push_back(*it);
-		//std::cout << "in rightTab, it = " << *it << '\n';
-		++it;
-	}
-	std::list<int>::iterator	it1 = leftTab.begin();
-	std::list<int>::iterator	it2 = rightTab.begin();
-	it = leftTab.begin();
-	std::advance(it, left);
-    while (it1 != leftTab.end() && it2 != rightTab.end()) 
-	{
-		std::cout << "it1= " << *it1 << ", it2= " << *it2 << ", it= " << *it << '\n';
-        if (*it1 <= *it2) 
-		{
-			*it = *it1;
-            ++it1;
-        } 
-		else if (*it1 > *it2) 
-		{
-			*it = *it2;
-            ++it2;
-        }
-		++it;
+    for (i = 0; i < s1; ++i)
+		leftTab.push_back(_deque[left + i]);
+    for (j = 0; j < s2; ++j)
+		rightTab.push_back(_deque[middle + 1 + j]);
+    i = 0, j = 0, k = left;
+    while (i < s1 && j < s2)
+    {
+        if (leftTab[i] <= rightTab[j])
+            _deque[k++] = leftTab[i++];
+        else if (leftTab[i] > rightTab[j])
+            _deque[k++] = rightTab[j++];
     }
-    while (it1 != leftTab.end()) 
-	{
-        *it = *it1;
-        ++it1;
-		++it;
-    }
-    while (it2 != rightTab.end()) 
-	{
-        *it = *it2;
-        ++it2;
-		++it;
-    }
+    while (i < s1)
+        _deque[k++] = leftTab[i++];
+    while (j < s2)
+        _deque[k++] = rightTab[j++];
 }
  
-void	PmergeMe::listMergeSort(int left, int right) 
+void	PmergeMe::dequeMergeSort(int left, int right) 
 {
     if (left < right) 
 	{
         int middle = left +(right - left) / 2;
-		std::cout << "middle = " << middle << '\n';
-		listMerge(left, middle, right);
-        listMergeSort(left, middle);
-        listMergeSort(middle + 1, right);
-		//listMerge(left, middle, right);
+	    dequeMergeSort(left, middle);
+        dequeMergeSort(middle + 1, right);
+		dequeMerge(left, middle, right );
     }
 }
 
 void	PmergeMe::merge(void)
 {
 	int r = _nElement;
-	std::vector<int>	tmp = _unsortedVect;
+	std::vector<unsigned int>	tmp = _unsortedVect;
 	for (size_t i = 0; i < _unsortedVect.size(); i++)
 	{
 		_vect.push_back(_unsortedVect[i]);
-		_lst.push_back(_unsortedVect[i]);
+		_deque.push_back(_unsortedVect[i]);
 	}
-	std::cout << "before vectorMerge r= " << r << '\n';
+	const std::clock_t c_start1 = std::clock();
 	vectorMergeSort(0, r - 1);
-	std::cout << "after vectorMerge r= " << r << '\n';
-	listMergeSort(0, r - 1);
+	const std::clock_t c_end1 = std::clock();
+	_vTime = 1000.0 * (c_end1 - c_start1) / CLOCKS_PER_SEC;
+	const std::clock_t c_start2 = std::clock();
+	dequeMergeSort(0, r - 1);
+	const std::clock_t c_end2 = std::clock();
+	_dTime = 1000.0 * (c_end2 - c_start2) / CLOCKS_PER_SEC;
 }

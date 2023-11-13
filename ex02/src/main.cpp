@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:43:40 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/09 18:11:31 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/13 18:20:47 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,20 +18,19 @@ int main(int ac, char **av)
 {
 	if (ac < 2)
 	{
-		std::cerr << "Usage: <value>" << '\n';
+		std::cerr << RED "Usage: <value>" DEFAULT << '\n';
 		return(1);
 	}
 	if (ac == 2)
 	{
-		std::cerr << "Bad Input: not enough numbers to sort." << '\n';
+		std::cerr << RED "Bad Input: not enough numbers to sort." DEFAULT << '\n';
 		return(2);
 	}
-	//if (ac > 3001)
+	//if (ac > 3000)
 	//{
-	//	std::cerr << "Bad Input: not enough numbers to sort." << '\n';
+	//	std::cerr << "Bad Input: too much numbers." << '\n';
 	//	return(3);
 	//}
-	
 	std::string		input = av[1];
 	if (input.empty() || input.size() < 1)
 	{
@@ -44,7 +43,7 @@ int main(int ac, char **av)
 		P->checkInput(ac, av);
 		P->merge();
 		P->printAll();
-		//std::cout << *P << std::endl;
+		std::cout << *P;
 	}
 	catch(const std::exception& e)
 	{

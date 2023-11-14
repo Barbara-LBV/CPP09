@@ -6,28 +6,22 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:25:26 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/09 10:29:21 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:57:10 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*You must use at least one container in your code to validate this
-exercise. You should handle possible errors with an appropriate
-error message.*/
-
 #include "../lib/BitCoinExchange.hpp"
-#include <stdexcept>
-#include <cstring>  
 
 int main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		std::cerr << RED "Usage: <value>" DEFAULT << '\n';
+		std::cerr << RED "Usage <value>" DEFAULT << '\n';
 		return(1);
 	}
-	BitCoin 		*b = new BitCoin();
+	BitCoinExchange *b = new BitCoinExchange();
 	std::ifstream 	file, input;
-	std::string 	date, rate, s, content;
+	std::string 	date, rate, s;
   	file.exceptions(std::ifstream::badbit);
 	try 
 	{
@@ -38,7 +32,7 @@ int main(int ac, char **av)
 	}
 	catch (std::ifstream::failure &e)
 	{
-		std::cerr << RED "Error with opening,reading or closing file" << std::endl;;
+		std::cerr << RED "Error with opening, reading or closing database file" DEFAULT << std::endl;
 	}
 	input.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 	try
@@ -46,28 +40,25 @@ int main(int ac, char **av)
 		input.open(av[1]);
 		getline(input, s);
 		if (s.compare("date | value") != 0)
-			throw BitCoin::BadInput();
+		{
+			std::cerr << RED "Error: wrong header" DEFAULT << std::endl;
+			input.close();
+			input.open(av[1]);
+		}
 		while (getline(input, s))
 		{
-			size_t i(0);
-			while (s[i] && s[i] == 32)
-				i++;
-			date = s.substr(i, 10);
-			i += 11;
-			while (s[i] && !(s[i] >= 0 && s[i] <= '9') && s[i] != '-')
-				i++;
-			if (i < s.size())
-				rate = s.substr(i);
-			b->printRate(date, rate);
-			date.clear();
-			rate.clear();
+			b->findInfo(s);
+			b->printRate();
+			b->setDate("");
+			b->setRate("");
 			if (input.eof())
 				break ;
 		}
+		input.close();
 	}
 	catch(const std::exception &e)
 	{
-		std::cerr << RED << e.what() << DEFAULT << std::endl;
+		std::cerr << RED "Error with opening, reading or closing input file" DEFAULT << std::endl;
 	}
 	delete b;
 	return (0);

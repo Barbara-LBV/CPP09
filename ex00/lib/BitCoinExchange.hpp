@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:28:59 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/06 15:56:30 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 15:55:08 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 #include <stdlib.h>
 #include <iomanip>
 #include <cstdlib>
+#include <stdexcept>
+#include <cstring>  
 #include <map>
 
 # define DEFAULT "\001\033[0;39m\002"
@@ -28,36 +30,42 @@
 # define BLUE "\001\033[1;36m\002"
 # define YELLOW "\001\033[1;93m\002"
 
-class BitCoin
+class BitCoinExchange
 {
     private :
         std::map<std::string, float>  _map;
+        std::string                   _date;
+        std::string                   _rate;
         int                           _d;
         int                           _m;
         int                           _y;
   
     public :
-        BitCoin();
-        BitCoin(BitCoin const &b);
-        BitCoin &operator=(BitCoin const &b);
-        ~BitCoin();
+        BitCoinExchange();
+        BitCoinExchange(BitCoinExchange const &b);
+        BitCoinExchange &operator=(BitCoinExchange const &b);
+        ~BitCoinExchange();
 
-        void	      fillMap(std::string date, std::string r);
-        std::string	checkDate(std::string date);
-        void        printRate(std::string date, std::string rate);
-        bool 	      checkYear(std::string y);
-        bool 	      checkMonth(std::string m);
-        bool 	      checkDay(std::string d);
-        void	      findDate(std::string date, float val);
-        std::string decreaseDate(void);
-        void        convert(std::string input);
+        void	            fillMap(std::string date, std::string r);
+        void      	      checkDate(void);
+        void              findInfo(std::string s);
+        void              printRate(void);
+        bool 	            checkYear(std::string y);
+        bool 	            checkMonth(std::string m);
+        bool 	            checkDay(std::string d);
+        void	            findDate(std::string date, float val);
+        std::string       decreaseDate(void);
+        void              convert(std::string input);
+        std::string const &getDate(void)const;
+        void              setDate(std::string date);
+			  void              setRate(std::string rate);
 
-    class BadInput : public std::exception
+    class BadDate : public std::exception
     {
       public:
         virtual const char* what() const throw()
           {
-            return ("Bad input.");
+            return ("bad Input");
           }
     };
     class NoPositiveNb : public std::exception
@@ -65,7 +73,7 @@ class BitCoin
       public:
         virtual const char* what() const throw()
         {
-          return ("not a positive number.");
+          return ("not a positive integer");
         }
     };
     class RateTooLarge : public std::exception
@@ -73,7 +81,7 @@ class BitCoin
       public:
         virtual const char* what() const throw()
         {
-          return ("too large a number.");
+          return ("too large a number");
         }
     };  
 };

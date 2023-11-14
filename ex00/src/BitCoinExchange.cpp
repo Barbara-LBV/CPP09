@@ -6,59 +6,88 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:42:29 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/06 14:56:53 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 16:24:22 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../lib/BitCoinExchange.hpp"
 
-BitCoin::BitCoin()
+BitCoinExchange::BitCoinExchange()
 {
 	std::cout << BLUE "Default constructor -> called" DEFAULT << std::endl;
+	_date = "";
+	_rate = "";
+	_d = 0;
+	_m = 0;
+	_y = 0;
 }
 
-BitCoin::BitCoin(BitCoin const &b)
+BitCoinExchange::BitCoinExchange(BitCoinExchange const &b)
 {
 	std::cout << BLUE "Copy constructor -> called" DEFAULT << std::endl;
 	*this = b;
 }
 
-BitCoin &BitCoin::operator=(BitCoin const &b)
+BitCoinExchange &BitCoinExchange::operator=(BitCoinExchange const &b)
 {
 	std::cout << BLUE "Assignement opertor -> called" DEFAULT << std::endl;
 	if (this != &b)
+	{
 		_map = b._map;
+		_date = b._date;
+		_rate = b._rate;
+		_d = b._d;
+		_m = b._m;
+		_y = b._y;
+	}
 	return (*this);
 }
 
-BitCoin::~BitCoin()
+BitCoinExchange::~BitCoinExchange()
 {
 	std::cout << BLUE "Destructor -> called" DEFAULT << std::endl;
 }
 
-std::string	BitCoin::checkDate(std::string date)
+void 	BitCoinExchange::setDate(std::string date)
 {
-	std::stringstream s(date);
-	std::string	year, month, day;
-	
-	if (getline(s, year, '-') && checkYear(year) == false)
-		throw BadInput();
-	if (getline(s, month, '-') && checkMonth(month) == false)
-		throw BadInput();
-	if (getline(s, day) && checkDay(day) == false)
-		throw BadInput();
-	return(date);
+	_date = date;
 }
 
-bool 	BitCoin::checkYear(std::string y)
+void    BitCoinExchange::setRate(std::string rate)
+{
+	_rate = rate;		
+}
+
+std::string const	&BitCoinExchange::getDate(void)const
+{
+	return _date;
+}
+
+void	BitCoinExchange::checkDate(void)
+{
+	std::stringstream	s(_date);
+	std::string			year, month, day;
+	
+	std::size_t found = _date.find_first_not_of("0123456789-");
+	if (found != std::string::npos || _date.size() != 10)
+		throw BadDate();
+	if (getline(s, year, '-') && checkYear(year) == false)
+		throw BadDate();
+	if (getline(s, month, '-') && checkMonth(month) == false)
+		throw BadDate();
+	if (getline(s, day) && checkDay(day) == false)
+		throw BadDate();
+}
+
+bool 	BitCoinExchange::checkYear(std::string y)
 {
 	_y = atoi(y.c_str());
-	if (_y < 2009 || _y > 2022)
+	if (_y < 1900 || _y > 2023)
 		return (false);
 	return (true);
 }
 
-bool 	BitCoin::checkMonth(std::string m)
+bool 	BitCoinExchange::checkMonth(std::string m)
 {
 	_m = atoi(m.c_str());
 	if (_m < 1 || _m > 12)
@@ -66,7 +95,7 @@ bool 	BitCoin::checkMonth(std::string m)
 	return (true);
 }
 
-bool 	BitCoin::checkDay(std::string d)
+bool 	BitCoinExchange::checkDay(std::string d)
 {
 	_d = atoi(d.c_str());
 	if (_d < 1 || _d > 31)
@@ -74,35 +103,55 @@ bool 	BitCoin::checkDay(std::string d)
 	return (true);
 }
 
-void	BitCoin::fillMap(std::string date, std::string r)
+void	BitCoinExchange::fillMap(std::string date, std::string r)
 {
 	float ex_rate = strtof(r.c_str(), NULL);
-	_map.insert(std::pair<std::string, float>(date,ex_rate));
+	_map.insert(std::pair<std::string, float>(date, ex_rate));
 }
 
-void        BitCoin::printRate(std::string date, std::string rate)
+void    BitCoinExchange::findInfo(std::string s)
+{
+	size_t 	i(0);
+	
+	while (s[i] && s[i] == 32)
+		i++;
+	if (s.size() > i + 10)
+		_date = s.substr(i, 10);
+	else 
+	{
+		_date = s.substr(i);
+		return ;
+	}	
+	i += 11;
+	while (s[i] && !isdigit(s[i]) && s[i] != '-')
+		i++;
+	if (i < s.size())
+		_rate = s.substr(i);
+}
+
+void	BitCoinExchange::printRate(void)
 {
 	float	r;
 	try
 	{
-		checkDate(date);
-		r = strtof(rate.c_str(), NULL);
+		checkDate();
+		r = strtof(_rate.c_str(), NULL);
 		if (r > 1000)
 			throw RateTooLarge();
 		if (r <= 0)
 			throw NoPositiveNb();
-		findDate(date, r);
+		findDate(_date, r);
 	}
 	catch(const std::exception& e)
 	{
 		if (dynamic_cast<const NoPositiveNb*>(&e) != NULL || dynamic_cast<const RateTooLarge*>(&e) != NULL)
             std::cerr << YELLOW "Error: " << e.what() << DEFAULT << std::endl;
 		else
-			std::cerr << RED << date << " => " << e.what() << DEFAULT << std::endl;
+			std::cerr << RED "Error: " << this->getDate() << " => " << e.what() << DEFAULT << std::endl;
 	}
 }
 
-void 	BitCoin::findDate(std::string date, float val)
+void 	BitCoinExchange::findDate(std::string date, float val)
 {
 	std::stringstream s(date);
 	
@@ -119,9 +168,10 @@ void 	BitCoin::findDate(std::string date, float val)
 	}
 }
 
-std::string BitCoin::decreaseDate(void)
+
+std::string BitCoinExchange::decreaseDate(void)
 {
-	std::string			newDate;
+	std::string			newDate = "";
 	std::stringstream 	conc;
 	
 	if (_d > 1)
@@ -136,6 +186,8 @@ std::string BitCoin::decreaseDate(void)
 		else
 			_d = 30;
 	}
+	else if (_y < 2009)
+		return ("2009-01-02");
 	else
 	{
 		_y--;
@@ -146,28 +198,3 @@ std::string BitCoin::decreaseDate(void)
 	newDate = conc.str();
 	return (newDate);
 }
-
-//void        BitCoin::convert(std::ifstream input)
-//{
-//	std::string::iterator 	it;
-//	std::string				content;
-	
-//	for (it != input.end())
-//	{
-//		getline(input, s);
-//		{
-//			while (!(*it >= 0 && *it <= '9'))
-//				i++;
-//			date = s.substr(i, 10);
-//			i += 11;
-//			while (s[i] && !(s[i] >= 0 && s[i] <= '9') && s[i] != '-')
-//				i++;
-//			if (i < s.size())
-//				rate = s.substr(i);
-//			b->printRate(date, rate);
-//			date.clear();
-//			rate.clear();
-//			i = 0;
-//		}
-//	}
-//}

@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:44:24 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/13 18:36:27 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 17:53:09 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,21 @@ size_t const &PmergeMe::getElement(void)const
 	return (_nElement);
 }
 
-void	PmergeMe::checkInput(int ac, char **av)
+void 	PmergeMe::checkInput(int ac, char **av)
+{
+	if (ac < 2)
+		throw BadUsage();
+	if (ac == 2)
+		throw NotEnoughNb();
+	std::string		input = av[1];
+	for (int i = 1; i < ac; i++)
+	{
+		if (input.empty() || input.size() < 1)
+			throw EmptyArgments();
+	}
+}
+ 
+void	PmergeMe::checkArguments(int ac, char **av)
 {
 	std::string		s;
 	unsigned int	nb;
@@ -82,12 +96,12 @@ void	PmergeMe::checkInput(int ac, char **av)
 		std::size_t found = s.find_first_not_of("0123456789");
 		if (found != std::string::npos || s.size() > 10)
 			throw BadInput();
-		if ((s.size() >= 10 && s[0] > '4') || (s.size() == 10 && s[0] == '4' && s[1] >= '2'))
+		if (s.size() == 10 && s[0] == '4' && s[1] >= '2')
 			throw BadInput();
 	}
 	for (int i = 1; i < ac; i++)
 	{
-		nb = static_cast<unsigned int>(strtod(av[i], NULL));
+		nb = static_cast<unsigned int>(strtol(av[i], NULL, 10));
 		if (nb > INT_MAX)
 			throw BadInput();
 		_unsortedVect.push_back(nb);
@@ -97,7 +111,7 @@ void	PmergeMe::checkInput(int ac, char **av)
 
 void	PmergeMe::printSortedNb(void)const
 {
-	std::cout << "****** Vector ******" << std::endl;
+	std::cout << BOLD "****** Vector ******" DEFAULT << std::endl;
 	std::vector<unsigned int>::const_iterator	it = _vect.begin();
 	while (it != _vect.end())
 	{
@@ -106,11 +120,9 @@ void	PmergeMe::printSortedNb(void)const
 	}
 	std::cout <<std::endl;
 	
-	std::cout << "****** Deque ******" << std::endl;
+	std::cout << BOLD "****** Deque ******" DEFAULT << std::endl;
 	for (size_t i = 0; i < _deque.size(); i++)
-	{
 		std::cout << _deque[i] << " ";
-	}
 	std::cout <<std::endl;
 }
 
@@ -128,9 +140,9 @@ void	PmergeMe::printUnsortedNb(void)const
 
 void	PmergeMe::printAll(void)
 {
-	std::cout << "Before: ";
+	std::cout << BOLD "Before " DEFAULT << std::endl;
 	printUnsortedNb();
-	std::cout << "After: " << '\n';
+	std::cout << BOLD "After " DEFAULT << std::endl;
 	printSortedNb();
 }
 
@@ -215,12 +227,12 @@ void	PmergeMe::merge(void)
 		_vect.push_back(_unsortedVect[i]);
 		_deque.push_back(_unsortedVect[i]);
 	}
-	const std::clock_t c_start1 = std::clock();
+	const std::clock_t start1 = std::clock();
 	vectorMergeSort(0, r - 1);
-	const std::clock_t c_end1 = std::clock();
-	_vTime = 1000.0 * (c_end1 - c_start1) / CLOCKS_PER_SEC;
-	const std::clock_t c_start2 = std::clock();
+	const std::clock_t end1 = std::clock();
+	_vTime = 1000000.0 * (end1 - start1) / CLOCKS_PER_SEC;
+	const std::clock_t start2 = std::clock();
 	dequeMergeSort(0, r - 1);
-	const std::clock_t c_end2 = std::clock();
-	_dTime = 1000.0 * (c_end2 - c_start2) / CLOCKS_PER_SEC;
+	const std::clock_t end2 = std::clock();
+	_dTime = 1000000.0 * (end2 - start2) / CLOCKS_PER_SEC;
 }

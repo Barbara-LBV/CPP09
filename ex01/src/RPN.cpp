@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:41:37 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/09 10:44:41 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 17:46:32 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	RPN::checkInput(std::string str)
 	std::string::iterator	it = str.begin();
 	std::string::iterator	ite = str.end();
 	int						flag1(0);
+	
 	if (*it == 32 || isSpecChar(*it))
 		throw BadInput();
 	while (it != ite)
@@ -95,10 +96,9 @@ void	RPN::checkInput(std::string str)
 std::string	RPN::fillStack(std::string input)
 {
 	int			nb;
-	size_t		i(0);
 	std::string tmp;
 	
-	for (; i < input.size(); i++)
+	for (size_t i = 0; i < input.size(); i++)
 	{
 		if (isdigit(input[i]))
 		{
@@ -114,16 +114,14 @@ std::string	RPN::fillStack(std::string input)
 			break ;
 		}
 	}
-	if (_op.size() == 0)
+	if (_op.compare("") == 0)
 		throw CantOperate();
 	return (input);
 }
 
 void 	RPN::operate(std::string input)
 {
-	size_t i(0);
-	
-	for (; i < input.size(); i++)
+	for (size_t i = 0; i < input.size(); i++)
 	{
 		if (input.size() == 0)
 			break ;

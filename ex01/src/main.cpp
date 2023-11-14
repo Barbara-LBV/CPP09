@@ -6,7 +6,7 @@
 /*   By: blefebvr <blefebvr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 17:40:18 by blefebvr          #+#    #+#             */
-/*   Updated: 2023/11/08 14:43:15 by blefebvr         ###   ########.fr       */
+/*   Updated: 2023/11/14 17:46:25 by blefebvr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ int main(int ac, char **av)
 {
 	if (ac != 2)
 	{
-		std::cerr << "Usage: <value>" << '\n';
+		std::cerr << RED "Usage: <value>" DEFAULT << '\n';
 		return(1);
 	}
 	std::string		input = av[1];
-	if (input.empty() || input.size() < 5)
+	if (input.empty() || input.size() < 3)
 	{
-		std::cerr << "Bad Input: argument empty or too short to operate." << '\n';
+		std::cerr << RED "Bad Input: argument empty or incomplete."  DEFAULT << '\n';
 		return(2);
 	}
 	RPN		*R = new RPN();
